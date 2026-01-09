@@ -41,7 +41,7 @@
             /* Gradients */
             --gradient-hero: linear-gradient(135deg, var(--peach-orange) 0%, var(--wave-blue) 100%);
             --gradient-card: linear-gradient(145deg, rgba(255, 107, 53, 0.08) 0%, rgba(74, 144, 217, 0.08) 100%);
-            --gradient-glow: radial-gradient(ellipse at center, rgba(255, 107, 53, 0.15) 0%, transparent 70%);
+            --gradient-glow: radial-gradient(ellipse at center, rgba(255, 107, 53, 0.25) 0%, transparent 70%);
         }
         
         * {
@@ -153,8 +153,8 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 8rem 2rem 4rem;
-            overflow: hidden;
+            padding: 5rem 2rem 2rem;
+            overflow: visible;
         }
         
         .hero-bg {
@@ -187,9 +187,15 @@
         
         .hero-content {
             max-width: 900px;
+            width: 100%;
             text-align: center;
             position: relative;
             z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
         }
         
         .badge {
@@ -198,11 +204,11 @@
             gap: 0.5rem;
             background: rgba(255, 107, 53, 0.1);
             border: 1px solid rgba(255, 107, 53, 0.2);
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.9rem;
             border-radius: 50px;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--peach-orange-light);
-            margin-bottom: 2rem;
+            margin: 0;
             animation: fadeInUp 0.8s ease;
         }
         
@@ -211,10 +217,11 @@
         }
         
         h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 700;
             line-height: 1.1;
-            margin-bottom: 1.5rem;
+            margin: 0;
+            color: white;
             animation: fadeInUp 0.8s ease 0.1s both;
         }
         
@@ -226,11 +233,12 @@
         }
         
         .hero-subtitle {
-            font-size: clamp(1.1rem, 2vw, 1.35rem);
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
             color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-            animation: fadeInUp 0.8s ease 0.2s both;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease 0.4s both;
         }
         
         .hero-ctas {
@@ -238,7 +246,7 @@
             gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
-            animation: fadeInUp 0.8s ease 0.3s both;
+            animation: fadeInUp 0.8s ease 0.5s both;
         }
         
         .btn {
@@ -278,9 +286,10 @@
         }
         
         .hero-visual {
-            margin-top: 4rem;
+            margin: 0;
             position: relative;
-            animation: fadeInUp 0.8s ease 0.4s both;
+            animation: fadeInUp 0.8s ease 0.3s both;
+            max-width: 100%;
         }
         
         .app-screenshot {
@@ -314,6 +323,7 @@
         
         .demo-video {
             width: 100%;
+            height: auto;
             border-radius: 12px;
             display: block;
             cursor: pointer;
@@ -1152,14 +1162,28 @@
             <div class="grid-pattern"></div>
         </div>
         <div class="hero-content">
-            <div class="badge">Beta • Early Access for Professional Video Editors</div>
-            <h1>
-                Fit Any Music to<br>
+            <h1 style="position: relative; line-height: 1.8;">
+                <span class="gradient">Align <span style="color: white; -webkit-text-fill-color: white; background: none; -webkit-background-clip: unset; background-clip: unset;">Any</span> Music</span><br>
                 <span class="gradient">Your Edit</span>
+                <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.45em; color: white; white-space: nowrap;">to</span>
             </h1>
+            
+            <div class="hero-visual">
+                <div class="app-screenshot">
+                    <div class="waveform-demo">
+                        <video class="demo-video" id="heroVideo" loop muted playsinline>
+                            <source src="demo-video.mp4?v=6" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <button class="video-sound-toggle" id="soundToggle" data-video="heroVideo">🔇 Click for sound</button>
+                    </div>
+                </div>
+            </div>
+            
             <p class="hero-subtitle">
-                Map audio moments to your video cues. Stretch, compress, or rearrange music to fit your edit — while keeping it sounding natural.
+                Rearrange music to fit your edit - shorter or longer, Map audio moments to your video cues, all while keeping it sounding natural.
             </p>
+            <div class="badge">Beta • Early Access for Professional Video Editors</div>
             <div class="hero-ctas">
                 <a href="#early-access" class="btn btn-primary">
                     <span>Get Early Access</span>
@@ -1168,30 +1192,6 @@
                 <a href="#how-it-works" class="btn btn-secondary">
                     <span>See How It Works</span>
                 </a>
-            </div>
-            
-            <div class="hero-visual">
-                <div class="app-screenshot">
-                    <div class="waveform-demo">
-                        <video class="demo-video" id="heroVideo" loop muted playsinline>
-                            <source src="demo-video.mp4?v=5" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <button class="video-sound-toggle" id="soundToggle" data-video="heroVideo">🔇 Click for sound</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="hero-visual" style="margin-top: 2rem;">
-                <div class="app-screenshot">
-                    <div class="waveform-demo">
-                        <video class="demo-video" id="heroVideo2" loop muted playsinline>
-                            <source src="demo-video2.mp4?v=1" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <button class="video-sound-toggle" id="soundToggle2" data-video="heroVideo2">🔇 Click for sound</button>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -1339,13 +1339,11 @@
     </footer>
 
     <script>
-        // Video sound toggle with exclusive mode
+        // Video sound toggle
         const heroVideo = document.getElementById('heroVideo');
-        const heroVideo2 = document.getElementById('heroVideo2');
         const soundToggle = document.getElementById('soundToggle');
-        const soundToggle2 = document.getElementById('soundToggle2');
         
-        // Play videos when they come into view
+        // Play video when it comes into view
         const videoObserverOptions = {
             root: null,
             rootMargin: '0px',
@@ -1365,12 +1363,9 @@
             });
         }, videoObserverOptions);
         
-        // Observe both videos
+        // Observe video
         if (heroVideo) {
             videoObserver.observe(heroVideo);
-        }
-        if (heroVideo2) {
-            videoObserver.observe(heroVideo2);
         }
         
         function muteVideo(video, toggle) {
@@ -1387,21 +1382,9 @@
         
         soundToggle.addEventListener('click', () => {
             if (heroVideo.muted) {
-                // Unmute this video, mute the other
                 unmuteVideo(heroVideo, soundToggle);
-                muteVideo(heroVideo2, soundToggle2);
             } else {
                 muteVideo(heroVideo, soundToggle);
-            }
-        });
-        
-        soundToggle2.addEventListener('click', () => {
-            if (heroVideo2.muted) {
-                // Unmute this video, mute the other
-                unmuteVideo(heroVideo2, soundToggle2);
-                muteVideo(heroVideo, soundToggle);
-            } else {
-                muteVideo(heroVideo2, soundToggle2);
             }
         });
         
