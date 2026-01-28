@@ -1930,11 +1930,13 @@
         
         // Generate or retrieve anonymous UUID
         function getOrCreateUUID() {
-            let uuid = localStorage.getItem('anywave_uuid');
+            // Check both keys for backwards compatibility, prefer ph_uuid
+            let uuid = localStorage.getItem('ph_uuid') || localStorage.getItem('anywave_uuid');
             if (!uuid) {
-                uuid = 'anon_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('anywave_uuid', uuid);
+                uuid = crypto.randomUUID();
             }
+            // Always store in ph_uuid for consistency across pages
+            localStorage.setItem('ph_uuid', uuid);
             return uuid;
         }
         

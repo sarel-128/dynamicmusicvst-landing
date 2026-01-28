@@ -3531,11 +3531,13 @@
         
         // Generate or retrieve anonymous UUID
         function getOrCreateUUID() {
-            let uuid = localStorage.getItem('ph_uuid');
+            // Check both keys for backwards compatibility, prefer ph_uuid
+            let uuid = localStorage.getItem('ph_uuid') || localStorage.getItem('anywave_uuid');
             if (!uuid) {
                 uuid = crypto.randomUUID();
-                localStorage.setItem('ph_uuid', uuid);
             }
+            // Always store in ph_uuid for consistency across pages
+            localStorage.setItem('ph_uuid', uuid);
             return uuid;
         }
         
