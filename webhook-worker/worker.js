@@ -132,8 +132,8 @@ async function mergeUsers(oldAnonymousId, newIdentifiedId) {
     console.log('Merging users:', { oldAnonymousId, newIdentifiedId });
     
     // Use $create_alias to link the anonymous ID to the identified user
-    // distinct_id = the OLD anonymous ID
-    // alias = the NEW identified ID (hashed email)
+    // distinct_id = the NEW primary ID (hashed email) - this stays as the main identity
+    // alias = the OLD anonymous ID - this gets merged INTO the primary
     const response = await fetch(`${POSTHOG_HOST}/batch/`, {
         method: 'POST',
         headers: {
@@ -145,8 +145,8 @@ async function mergeUsers(oldAnonymousId, newIdentifiedId) {
                 {
                     event: '$create_alias',
                     properties: {
-                        distinct_id: oldAnonymousId,
-                        alias: newIdentifiedId,
+                        distinct_id: newIdentifiedId,
+                        alias: oldAnonymousId,
                         $lib: 'cloudflare-worker'
                     },
                     timestamp: new Date().toISOString()
