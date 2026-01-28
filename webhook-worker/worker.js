@@ -114,9 +114,8 @@ async function handleWebhook(request, env) {
 }
 
 /**
- * Merge anonymous user into identified user using PostHog's $identify event
- * with $anon_distinct_id property (the official server-side merge method)
- * This makes newIdentifiedId (hashed email) the primary, merging oldAnonymousId into it
+ * Create alias to link anonymous user to identified user using PostHog's $create_alias
+ * This links oldAnonymousId to newIdentifiedId (hashed email)
  */
 async function mergeUsers(oldAnonymousId, newIdentifiedId) {
     if (!oldAnonymousId || !newIdentifiedId) {
@@ -130,11 +129,11 @@ async function mergeUsers(oldAnonymousId, newIdentifiedId) {
         return false;
     }
     
-    console.log('Merging users:', { oldAnonymousId, newIdentifiedId });
+    console.log('Creating alias:', { oldAnonymousId, newIdentifiedId });
     
-    // Use $identify with $anon_distinct_id to merge users (server-side method)
-    // distinct_id = the NEW primary ID (hashed email) - this stays as the main identity
-    // $anon_distinct_id = the OLD anonymous ID - this gets merged INTO the primary
+    // Use $create_alias to link the anonymous ID to the identified user
+    // distinct_id = hashed email (the primary identity)
+    // alias = anonymous UUID (gets linked to primary)
     const response = await fetch(`${POSTHOG_HOST}/batch/`, {
         method: 'POST',
         headers: {
@@ -144,10 +143,10 @@ async function mergeUsers(oldAnonymousId, newIdentifiedId) {
             api_key: POSTHOG_API_KEY,
             batch: [
                 {
-                    event: '$identify',
-                    distinct_id: newIdentifiedId,
+                    event: '$create_alias',
                     properties: {
-                        $anon_distinct_id: oldAnonymousId,
+                        distinct_id: newIdentifiedId,
+                        alias: oldAnonymousId,
                         $lib: 'cloudflare-worker'
                     },
                     timestamp: new Date().toISOString()
@@ -157,7 +156,7 @@ async function mergeUsers(oldAnonymousId, newIdentifiedId) {
     });
     
     const responseText = await response.text();
-    console.log('Identify/merge response status:', response.status, 'body:', responseText);
+    console.log('Alias response status:', response.status, 'body:', responseText);
     return response.ok;
 }
 
