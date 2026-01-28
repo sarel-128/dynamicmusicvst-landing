@@ -114,8 +114,8 @@ async function handleWebhook(request, env) {
 }
 
 /**
- * Merge anonymous user into identified user using PostHog's $identify event
- * This is the correct server-side method (replaces deprecated $create_alias)
+ * Merge anonymous user into identified user using PostHog's $create_alias event
+ * This links the old anonymous ID to the new identified user (hashed email)
  */
 async function mergeUsers(oldAnonymousId, newIdentifiedId) {
     if (!oldAnonymousId || !newIdentifiedId) {
@@ -131,7 +131,9 @@ async function mergeUsers(oldAnonymousId, newIdentifiedId) {
     
     console.log('Merging users:', { oldAnonymousId, newIdentifiedId });
     
-    // Use the batch endpoint for more reliable processing
+    // Use $create_alias to link the anonymous ID to the identified user
+    // distinct_id = the OLD anonymous ID
+    // alias = the NEW identified ID (hashed email)
     const response = await fetch(`${POSTHOG_HOST}/batch/`, {
         method: 'POST',
         headers: {
@@ -141,13 +143,10 @@ async function mergeUsers(oldAnonymousId, newIdentifiedId) {
             api_key: POSTHOG_API_KEY,
             batch: [
                 {
-                    event: '$identify',
-                    distinct_id: newIdentifiedId,
+                    event: '$create_alias',
                     properties: {
-                        $anon_distinct_id: oldAnonymousId,
-                        $set: {
-                            merged_from_anonymous: oldAnonymousId
-                        },
+                        distinct_id: oldAnonymousId,
+                        alias: newIdentifiedId,
                         $lib: 'cloudflare-worker'
                     },
                     timestamp: new Date().toISOString()
@@ -157,7 +156,7 @@ async function mergeUsers(oldAnonymousId, newIdentifiedId) {
     });
     
     const responseText = await response.text();
-    console.log('Merge response status:', response.status, 'body:', responseText);
+    console.log('Alias response status:', response.status, 'body:', responseText);
     return response.ok;
 }
 
