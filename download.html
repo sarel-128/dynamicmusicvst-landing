@@ -210,17 +210,8 @@
             }
             
             const hashedEmail = await hashEmail(email);
-            const currentDistinctId = posthog.get_distinct_id();
             
-            // Create alias to link the current distinct ID to the hashed email
-            // posthog.alias(alias, original_distinct_id) - alias gets added to original
-            // We want hashedEmail as primary, so currentDistinctId becomes the alias
-            posthog.alias(currentDistinctId, hashedEmail);
-            
-            // Identify with hashed email (continues the funnel)
-            posthog.identify(hashedEmail);
-            
-            // Track download event
+            // Just track the download - webhook already handled identity merging
             posthog.capture('download_started', {
                 hashed_email: hashedEmail,
                 source: 'post_checkout'

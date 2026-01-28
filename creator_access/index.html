@@ -2142,49 +2142,25 @@
         }
         
         // Handle checkout success - called from multiple sources
+        // NOTE: User merging is handled by the webhook, not client-side
         async function handleCheckoutSuccess(email, orderData) {
             console.log('handleCheckoutSuccess called with email:', email ? '***' : 'none');
-            
-            if (!email) {
-                console.log('No email provided, cannot identify');
-                return;
-            }
             
             if (typeof posthog === 'undefined') {
                 console.log('PostHog not loaded');
                 return;
             }
             
-            try {
-                const hashedEmail = await hashEmailLS(email);
-                const currentDistinctId = posthog.get_distinct_id();
-                console.log('Identifying user with hashed email:', hashedEmail);
-                console.log('Current distinct_id:', currentDistinctId);
-                
-                // Create alias to link the current distinct ID to the hashed email
-                // posthog.alias(alias, original_distinct_id) - alias gets added to original
-                // We want hashedEmail as primary, so currentDistinctId becomes the alias
-                posthog.alias(currentDistinctId, hashedEmail);
-                
-                // Identify the user with the hashed email
-                posthog.identify(hashedEmail, {
-                    email_hash: hashedEmail,
-                    early_access: true,
-                    checkout_completed: true
-                });
-                
-                // Capture checkout_completed event
-                posthog.capture('checkout_completed_client', {
-                    order_id: orderData?.id,
-                    total: orderData?.total,
-                    currency: orderData?.currency,
-                    source: 'early_access_page_overlay'
-                });
-                
-                console.log('PostHog: User identified and checkout_completed_client tracked!');
-            } catch (err) {
-                console.error('Error in handleCheckoutSuccess:', err);
-            }
+            // Just capture the event - webhook handles user identity merging
+            // This avoids race conditions between client and server
+            posthog.capture('checkout_completed_client', {
+                order_id: orderData?.id,
+                total: orderData?.total,
+                currency: orderData?.currency,
+                source: 'creator_access_page_overlay'
+            });
+            
+            console.log('PostHog: checkout_completed_client tracked (webhook handles identity)');
         }
         
         // Method 1: Lemon Squeezy official event setup
