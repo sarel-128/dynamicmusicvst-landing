@@ -6,7 +6,7 @@
  */
 
 // PostHog configuration
-const POSTHOG_API_KEY = 'phc_Diy4fB5dTnxjkxCneauukkmdVkfw1YRm6EAejL45PG3';
+const POSTHOG_API_KEY = 'phc_IExUOye7moy0kVa1YZIAZOYF6PYGKRavkTcQLzHhjPI';
 const POSTHOG_HOST = 'https://us.i.posthog.com';
 
 // Lemon Squeezy webhook secret (set this in Cloudflare dashboard as environment variable)
